@@ -2,7 +2,7 @@
 //FORCE SENSOR HANDLING
 //-------------
 #define MAX_SENSOR_VALUE 1024
-#define IDLE_SENSOR_THRESHOLD 50 //
+#define IDLE_SENSOR_THRESHOLD 100 //
 
 //---------
 //VARIABLES
@@ -16,30 +16,32 @@ unsigned long lastTapTimestamp= micros();
 //---------
 //FUNCTIONS
 //--------
-bool recordMaxValueInPress() {
+void recordMaxValueInPress() {
   //getsensor value
   sensorValue = analogRead(sensorPin);
   currentlyPressing = (sensorValue>IDLE_SENSOR_THRESHOLD);
   
   //print for debugging
-//  Serial.print(sensorValue);
-//  Serial.print("\n");
-  
+  // Serial.print(sensorValue);
+  // Serial.print("\n");
+  //Serial.print("21\n");//dev
   //record highest value in single press
   if(currentlyPressing){
     if(sensorValue>maxtapValue) maxtapValue=sensorValue;
   }
-  
+  //Serial.print("31\n");//dev
+  yield();
 }
 
 //returns -1 for none, [0-1] for touch strength
 double detectTap(){
   recordMaxValueInPress();
-  
+  //Serial.print("41\n");//dev
+
   if(maxtapValue>0 && !currentlyPressing){
     //save timestamp of last tap
     lastTapTimestamp=micros();
-    
+    //Serial.print("51\n");//dev
     //save tapvalue to temp and reset it
     double tapValDuplicate=maxtapValue;
     maxtapValue=0;
@@ -47,6 +49,7 @@ double detectTap(){
     //divide by max value to normalize between 0-1
     return (tapValDuplicate/(double)MAX_SENSOR_VALUE);
   }
+  //Serial.print("61\n");//dev
   
   return -1;
 }
