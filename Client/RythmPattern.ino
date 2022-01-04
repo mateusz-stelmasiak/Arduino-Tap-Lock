@@ -127,5 +127,5 @@ float matchPatterns(RythmPattern pat1, RythmPattern pat2) {
 
 //returns a string uniquely identifying the pattern
 String hashPattern(RythmPattern pat){
-  
+  //TODO
 }

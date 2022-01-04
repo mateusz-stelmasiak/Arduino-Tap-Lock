@@ -6,8 +6,7 @@ int failureLED= 8;
 
 //TODO 
 
-
-//repeats pattern back to user on the led diode
+//repeats pattern back to user on the led
 void repeatPattern(){
 
 }
