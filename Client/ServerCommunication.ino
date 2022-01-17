@@ -15,7 +15,7 @@ const char *password = "policja997";  //your wifi Password
 const char *serverIP = "172.20.10.6"; //server ip
 const int serverPort = 8070; //server port
 
-
+WiFiClient client;
 
 
 void setupTCP() 
@@ -41,27 +41,30 @@ void setupTCP()
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());  
   server.begin();
-
 }
 
+void sendToServer(String msg){
+  if (!client.connected()){
+    client.connect(serverIP, serverPort)
+  }
+  
+  if (client.connected(){
+     client.print(msg);
+  }
+}
 
 
 void sendResponseToServer(float matchScore)
 {
-  WiFiClient client;
-  if (client.connect(serverIP, serverPort)) {
-
-    if(matchScore>0.5){
-      client.print("1");
-    }else{
-      client.print("0");
-    }
-  Serial.print("Sending finished");
-  client.stop();
+    sendToServer("%"+matchScore);
 }
 
-  
+char* readFromServer(){
+  char *msg = client.read();
+  return msg;
 }
+
+
 //after a new password has been set
 void sendNewPasswordToServer(RythmPattern pattern){
   

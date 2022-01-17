@@ -97,13 +97,19 @@ void loop()
        //Serial.print("2\n");//dev
        while (!checkForCommit(currentPattern))
        {
+        if(readFromServer=="setPassword"){
+          currentMode =1;
+          break;
+        }
+
         tapValue = detectTap();
-            
+
         if (tapValue != -1)
         {
           Serial.print("Tap strength: ");
           Serial.print(tapValue);
           Serial.print("\n");
+          sendToServer("Tap strength: "+tapValue);
           
           //for first tap in a sequence
           if (currentPattern.length == 0)
@@ -119,6 +125,7 @@ void loop()
             if (currentPattern.length > MAX_PASS_LENGTH) 
             {
               Serial.print("PASSWORD TOO LONG!\n");
+              sendToServer("PASSWORD TOO LONG!");
               goto inputPassword;
             }
 
@@ -139,12 +146,12 @@ void loop()
        Serial.print("Match to lock password: ");
        Serial.print(matchScore);
        Serial.print("\n");
+       sendToServer("Match to lock password: "+matchScore);
        
        Serial.print("SENDING PASSWORD TO SERVER...\n");
         
        if (matchScore > 0.5)
        {
-
         notifySuccess();
         openServo();
        }
@@ -161,6 +168,7 @@ void loop()
       //Serial.print("3\n");//dev
       setNewPassword: //label for goto
       Serial.print("SET NEW PASSWORD!\n");
+      sendToServer("SET NEW PASSWORD!");
       struct RythmPattern passwordSource[PASSWORD_REPEAT];
       int currentRepetition=0;
 
@@ -175,6 +183,9 @@ void loop()
               Serial.print("Tap strength: ");
               Serial.print(tapValue);
               Serial.print("\n");
+              //send tap to server
+              sendToServer("Tap strength: "+tapValue);
+              
               
               //for first tap in a sequence
               if (passwordSource[currentRepetition].length == 0)
@@ -191,6 +202,7 @@ void loop()
                 if (passwordSource[currentRepetition].length > MAX_PASS_LENGTH) 
                 {
                   Serial.print("PASSWORD TOO LONG!\n");
+                  sendToServer("PASSWORD TOO LONG!");
                   notifyFailure();
                   goto setNewPassword;
                 }
@@ -211,6 +223,8 @@ void loop()
           Serial.print("Repetition ");
           Serial.print(currentRepetition+1);
           Serial.print(" completed\n");
+          int nextRep=currentRepetition+1;
+          sendToServer("Repetition "+nextRep+" completed");
           
           normalizePattern(passwordSource[currentRepetition]);
           printPattern(passwordSource[currentRepetition]);
@@ -226,6 +240,7 @@ void loop()
                Serial.print("Match to prev rep: ");
                Serial.print(matchScore);
                Serial.print("\n");
+               sendToServer("Match to prev rep: "+match);
                if(matchScore<REPEAT_ACCURACY){
                 notifyFailure();
                 goto setNewPassword;
@@ -237,6 +252,7 @@ void loop()
       }
       
       Serial.print("SUCCESS! SETTING NEW PASSWORD...\n");
+      sendToServer("SUCCESS! SETTING NEW PASSWORD...");
       notifySuccess();
       notifySuccess();
       notifySuccess();

@@ -35,6 +35,7 @@ void recordMaxValueInPress() {
 
 //returns -1 for none, [0-1] for touch strength
 double detectTap(){
+
   recordMaxValueInPress();
   //Serial.print("41\n");//dev
 
@@ -47,6 +48,7 @@ double detectTap(){
     maxtapValue=0;
  
     //divide by max value to normalize between 0-1
+    delay(100);
     return (tapValDuplicate/(double)MAX_SENSOR_VALUE);
   }
   //Serial.print("61\n");//dev
