@@ -25,11 +25,23 @@ def checkPassword(password: str):
             return "Success"
     return "Wrong password"
 
+
 def authorize(matchScore):
     if float(matchScore) > 0.5:
         print("success")
     else:
         print("Auth failed")
+
+
+def setNewPassword(clientSocket):
+    clientSocket.send("setPassword")
+
+
+def decodeMessage(message):
+    if message[0] == "%":
+        authorize(message[1:])
+    else:
+        print(message)
 
 
 print("Nasluchiwanie: ")
