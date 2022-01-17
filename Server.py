@@ -8,7 +8,7 @@ savedPasswords = []
 
 
 def listentostatus():
-    return str(clientSocket.recv(1024), 'utf-8')
+    return str(clientSocket.recv(2048), 'utf-8')
 
 
 def savepasswordtoserver(password: str):
@@ -38,6 +38,7 @@ def setNewPassword(clientSocket):
 
 
 def decodeMessage(message):
+    print(message)
     if message[0] == "%":
         authorize(message[1:])
     else:
