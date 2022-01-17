@@ -45,10 +45,10 @@ void setupTCP()
 
 void sendToServer(String msg){
   if (!client.connected()){
-    client.connect(serverIP, serverPort)
+    client.connect(serverIP, serverPort);
   }
   
-  if (client.connected(){
+  if (client.connected()){
      client.print(msg);
   }
 }
@@ -56,11 +56,11 @@ void sendToServer(String msg){
 
 void sendResponseToServer(float matchScore)
 {
-    sendToServer("%"+matchScore);
+    sendToServer("%"+String(matchScore));
 }
 
-char* readFromServer(){
-  char *msg = client.read();
+String readFromServer(){
+  String msg = String(client.read());
   return msg;
 }
 

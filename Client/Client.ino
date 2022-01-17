@@ -97,7 +97,7 @@ void loop()
        //Serial.print("2\n");//dev
        while (!checkForCommit(currentPattern))
        {
-        if(readFromServer=="setPassword"){
+        if(readFromServer()=="setPassword"){
           currentMode =1;
           break;
         }
@@ -109,7 +109,7 @@ void loop()
           Serial.print("Tap strength: ");
           Serial.print(tapValue);
           Serial.print("\n");
-          sendToServer("Tap strength: "+tapValue);
+          sendToServer("Tap strength: "+String(tapValue));
           
           //for first tap in a sequence
           if (currentPattern.length == 0)
@@ -146,7 +146,7 @@ void loop()
        Serial.print("Match to lock password: ");
        Serial.print(matchScore);
        Serial.print("\n");
-       sendToServer("Match to lock password: "+matchScore);
+       sendToServer("Match to lock password: "+String(matchScore));
        
        Serial.print("SENDING PASSWORD TO SERVER...\n");
         
@@ -184,7 +184,7 @@ void loop()
               Serial.print(tapValue);
               Serial.print("\n");
               //send tap to server
-              sendToServer("Tap strength: "+tapValue);
+              sendToServer("Tap strength: "+ String(tapValue));
               
               
               //for first tap in a sequence
@@ -224,7 +224,7 @@ void loop()
           Serial.print(currentRepetition+1);
           Serial.print(" completed\n");
           int nextRep=currentRepetition+1;
-          sendToServer("Repetition "+nextRep+" completed");
+          sendToServer("Repetition "+String(nextRep)+" completed");
           
           normalizePattern(passwordSource[currentRepetition]);
           printPattern(passwordSource[currentRepetition]);
@@ -240,7 +240,7 @@ void loop()
                Serial.print("Match to prev rep: ");
                Serial.print(matchScore);
                Serial.print("\n");
-               sendToServer("Match to prev rep: "+match);
+               sendToServer("Match to prev rep: "+String(matchScore));
                if(matchScore<REPEAT_ACCURACY){
                 notifyFailure();
                 goto setNewPassword;
