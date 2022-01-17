@@ -13,6 +13,7 @@ void repeatPattern(){
 }
 
 void notifySuccess(){
+  myServo.write(180);
   pinMode(successLED, OUTPUT);
   digitalWrite(successLED,0);
   delay(100);
@@ -26,21 +27,23 @@ void notifySuccess(){
   delay(100);
   digitalWrite(successLED,1);
   delay(100);
-  
-}
-
-void openServo() {
-  myServo.write(180);
-  digitalWrite(successLED,0);
-  delay(5000);
-  digitalWrite(successLED,1);
-  myServo.write(0);
 }
 
 void blinkOnce() {
   digitalWrite(successLED,0);
   delay(100);
   digitalWrite(successLED,1);
+}
+
+void openServo() {
+  digitalWrite(successLED,0);
+  delay(5000);
+  digitalWrite(successLED,1);
+  myServo.write(0);
+}
+
+void lockServo(){
+    myServo.write(180);
 }
 
 void notifyFailure(){

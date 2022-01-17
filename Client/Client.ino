@@ -12,7 +12,7 @@
 #define UNLOCK_ACCURACY 0.5 //minimum match score for pattern to succesfully unlock
 #define COMMIT_TIME 2000000 //time that needs to pass after a sequence input to count is as finished (microseconds)
 #define SERVO_PIN 4
-#define BUZZER_PIN 0
+#define BUZZER_PIN 5
 
 //-------------
 //PROTOTYPES & STRUCTURES
@@ -235,6 +235,7 @@ void loop()
       notifySuccess();
       notifySuccess();
       lockPattern=calculatePattern(passwordSource);
+      lockServo();
       sendNewPasswordToServer(lockPattern);
       currentMode=0;  
     }  
