@@ -235,6 +235,7 @@ void loop()
       notifySuccess();
       notifySuccess();
       lockPattern=calculatePattern(passwordSource);
+      lockServo();
       sendNewPasswordToServer(lockPattern);
       currentMode=0;  
     }  

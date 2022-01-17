@@ -37,6 +37,10 @@ void openServo() {
   myServo.write(0);
 }
 
+void lockServo(){
+    myServo.write(180);
+}
+
 void notifyFailure(){
   pinMode(successLED, OUTPUT);
   digitalWrite(successLED,0);
