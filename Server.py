@@ -48,4 +48,4 @@ print("Nasluchiwanie: ")
 while 1:
     clientSocket, address = serversocket.accept()
     rec = listentostatus()
-    authorize(rec)
+    decodeMessage(rec)
