@@ -1,5 +1,5 @@
 #define HARD_SIMILARITY_THRESHOLD 0.7
-#define STRENGTH_DISSIMULARITY_PRICE 0.2
+#define STRENGTH_DISSIMULARITY_PRICE 0
 #define RYTHMIC_INACCURACY_THRESHOLD 0.15 
 
 //----------
@@ -127,5 +127,5 @@ float matchPatterns(RythmPattern pat1, RythmPattern pat2) {
 
 //returns a string uniquely identifying the pattern
 String hashPattern(RythmPattern pat){
-  //TODO
+  
 }

@@ -1,12 +1,18 @@
 //-------------
+//ADDITIONAL LIBRARIES 
+//-------------
+#include <Servo.h>
+
+//-------------
 //PROGRAM CONSTANTS 
 //-------------
-#define MAX_PASS_LENGTH 10 //max taps in a password
+#define MAX_PASS_LENGTH 15 //max taps in a password
 #define PASSWORD_REPEAT 3 //how many times must the user repeat his password when setting a new one
-#define REPEAT_ACCURACY 0.8 //minimum match score for repetitions of password when user is setting a new one
-#define UNLOCK_ACCURACY 0.92 //minimum match score for pattern to succesfully unlock
+#define REPEAT_ACCURACY 0.7 //minimum match score for repetitions of password when user is setting a new one
+#define UNLOCK_ACCURACY 0.5 //minimum match score for pattern to succesfully unlock
 #define COMMIT_TIME 2000000 //time that needs to pass after a sequence input to count is as finished (microseconds)
-
+#define SERVO_PIN 4
+#define BUZZER_PIN 0
 
 //-------------
 //PROTOTYPES & STRUCTURES
@@ -19,11 +25,12 @@ struct RythmPattern {
 
 bool checkForCommit(RythmPattern pattern);
 double detectTap();
-bool recordMaxValueInPress();
+void recordMaxValueInPress();
 //OUTPUT FUNCTIONS
 void printDebug(String msg);
 void notifySuccess();
 void notifyFailure();
+void openServo();
 //RYTHM PATTERN FUNCTIONS
 void addPressToSequence(RythmPattern &pattern, bool pressType);
 void addPressToSequence(RythmPattern &pattern, bool pressType, float time);
@@ -48,11 +55,16 @@ struct RythmPattern lockPattern; //holds current password rythm
 double tapValue; //helper variable in detecting button presses (-1-none, between [0-1] for hard to soft)
 unsigned long  lastTimestamp; //helper variable used for messuring distances between taps
 
+Servo myServo;
+
 void setup() {
   tapValue = -1;
   currentMode = 1;
   lastTimestamp== micros();
   Serial.begin(9600);   // for sending debugging information via the Serial monitor
+  myServo.attach(SERVO_PIN);
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN,0);
 }
 
 //-------------
@@ -72,12 +84,13 @@ bool checkForCommit(RythmPattern pattern){
 
 void loop() 
 {    
+  //Serial.print("1\n");//dev
     //INPUT PASSWORD MODE
     if (currentMode == 0){
        inputPassword: //label for goto
        Serial.print("INPUT PASSWORD!\n");
        struct RythmPattern currentPattern;
-       
+       //Serial.print("2\n");//dev
        while (!checkForCommit(currentPattern))
        {
         tapValue = detectTap();
@@ -125,11 +138,21 @@ void loop()
        
        Serial.print("SENDING PASSWORD TO SERVER...\n");
        tryPasswordOnServer(currentPattern);
+       if (matchScore > UNLOCK_ACCURACY)
+       {
+        notifySuccess();
+        openServo();
+       }
+       else
+       {
+        notifyFailure();
+       }
     }
   
     //SETTING NEW PASSWORD MODE
     if (currentMode == 1)
     {
+      //Serial.print("3\n");//dev
       setNewPassword: //label for goto
       Serial.print("SET NEW PASSWORD!\n");
       struct RythmPattern passwordSource[PASSWORD_REPEAT];
@@ -162,6 +185,7 @@ void loop()
                 if (passwordSource[currentRepetition].length > MAX_PASS_LENGTH) 
                 {
                   Serial.print("PASSWORD TOO LONG!\n");
+                  notifyFailure();
                   goto setNewPassword;
                 }
     
@@ -196,7 +220,10 @@ void loop()
                Serial.print("Match to prev rep: ");
                Serial.print(matchScore);
                Serial.print("\n");
-               if(matchScore<REPEAT_ACCURACY) goto setNewPassword;
+               if(matchScore<REPEAT_ACCURACY){
+                notifyFailure();
+                goto setNewPassword;
+               }
             }
           }
           
@@ -204,6 +231,8 @@ void loop()
       }
       
       Serial.print("SUCCESS! SETTING NEW PASSWORD...\n");
+      notifySuccess();
+      notifySuccess();
       notifySuccess();
       lockPattern=calculatePattern(passwordSource);
       sendNewPasswordToServer(lockPattern);
