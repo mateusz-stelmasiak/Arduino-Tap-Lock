@@ -31,6 +31,10 @@ def authorize(matchScore):
     else:
         print("Auth failed")
 
+def setNewPassword(clientSocket):
+    clientSocket.send("setPassword")
+
+
 
 print("Nasluchiwanie: ")
 while 1:
