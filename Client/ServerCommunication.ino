@@ -13,9 +13,12 @@ WiFiServer server(port);
 const char *ssid = "D:::::::";  //your wifi SSID
 const char *password = "policja997";  //your wifi Password
 const char *serverIP = "172.20.10.6"; //server ip
-const int serverPort = 8070; //server port
 
-WiFiClient client;
+//const char *ssid = "INEA-5971_2.4G";  //your wifi SSID
+//const char *password = "QEfXeXc5";  //your wifi Password
+//const char *serverIP = "192.168.137.17"; //server ip
+
+const int serverPort = 8070; //server port
 
 
 void setupTCP() 
@@ -44,13 +47,19 @@ void setupTCP()
 }
 
 void sendToServer(String msg){
-  if (!client.connected()){
-    client.connect(serverIP, serverPort);
-  }
+  WiFiClient client;
+
+client.connect(serverIP, serverPort);
+
+
+      Serial.println("CONNECTING to server");
+           client.print(msg);
+       Serial.println("Sending to server" + msg);
   
-  if (client.connected()){
-     client.print(msg);
-  }
+  
+//  if (client.connected()){
+
+//  }
 }
 
 
@@ -60,7 +69,15 @@ void sendResponseToServer(float matchScore)
 }
 
 String readFromServer(){
+WiFiClient client;
+
+client.connect(serverIP, serverPort);
+  
   String msg = String(client.read());
+
+Serial.print("CZYTAM: ");
+Serial.println(msg);
+  
   return msg;
 }
 

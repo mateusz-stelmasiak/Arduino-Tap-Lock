@@ -97,10 +97,10 @@ void loop()
        //Serial.print("2\n");//dev
        while (!checkForCommit(currentPattern))
        {
-        if(readFromServer()=="setPassword"){
-          currentMode =1;
-          break;
-        }
+//        if(readFromServer()=="setPassword"){
+//          currentMode =1;
+//          break;
+//        }
 
         tapValue = detectTap();
 
@@ -109,7 +109,7 @@ void loop()
           Serial.print("Tap strength: ");
           Serial.print(tapValue);
           Serial.print("\n");
-          sendToServer("Tap strength: "+String(tapValue));
+          //sendToServer("Tap strength: "+String(tapValue));
           
           //for first tap in a sequence
           if (currentPattern.length == 0)
@@ -167,8 +167,6 @@ void loop()
     {
       //Serial.print("3\n");//dev
       setNewPassword: //label for goto
-      Serial.print("SET NEW PASSWORD!\n");
-      sendToServer("SET NEW PASSWORD!");
       struct RythmPattern passwordSource[PASSWORD_REPEAT];
       int currentRepetition=0;
 
@@ -184,7 +182,7 @@ void loop()
               Serial.print(tapValue);
               Serial.print("\n");
               //send tap to server
-              sendToServer("Tap strength: "+ String(tapValue));
+              //sendToServer("Tap strength: "+ String(tapValue));
               
               
               //for first tap in a sequence
